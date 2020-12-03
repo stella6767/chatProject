@@ -71,6 +71,7 @@ public class ChatServer {
 
 			try {
 				while ((line = reader.readLine()) != null) {
+					
 					router(line);
 					fileWriter.write("[클라이언트" + this.getName() + "] " +line);
 					fileWriter.write("\r\n", 0, 2);
@@ -90,6 +91,7 @@ public class ChatServer {
 		public void router(String line) {
 			for (int i = 0; i < vc.size(); i++) {
 				if (vc.get(i) != this && line.contains(Protocol.ALL)) {
+					line = line.replaceAll(Protocol.ALL, "");
 					vc.get(i).writer.println("[클라이언트" + this.getName() + "] " + line);
 					vc.get(i).writer.flush();
 				} else if (!line.contains(Protocol.ALL) && vc.get(i) == this) {

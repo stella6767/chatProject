@@ -146,13 +146,12 @@ public class ChatClient extends JFrame {
 		taChatList.append("[내 메시지] " + chat + "\n"); // 추가
 		// 2번 서버로 전송
 		if (rbtn[0].isSelected()) {
-			writer.println(Protocol.ALL+chat);
+			writer.println(Protocol.ALL + chat);
+			writer.flush();
+		} else {
+			writer.println(chat);
 			writer.flush();
 		}
-		
-		
-		writer.println(chat);
-		writer.flush();
 
 		// 3번 tfchat 비우기
 		tfChat.setText(null);
