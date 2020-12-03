@@ -37,7 +37,6 @@ public class ChatClient extends JFrame {
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
-	
 
 	public ChatClient() {
 		init();
@@ -98,10 +97,9 @@ public class ChatClient extends JFrame {
 				send();
 			}
 		});
-		
-		
+
 		addWindowListener(new WindowAdapter() {
-			
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				writer.println(Protocol.Exit);
@@ -129,33 +127,31 @@ public class ChatClient extends JFrame {
 
 		String host = tfHost.getText();
 		try {
-			
+
 			taChatList.append("ALL: 치고 글자 입력하세요.(프로토콜 때문) " + "\n");
 			socket = new Socket(host, PORT);
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream(), true);
 			ReaderThread rt = new ReaderThread();
 			rt.start();
-			taChatList.append("서버에 연결하였습니다." +"\n");
+			taChatList.append("서버에 연결하였습니다." + "\n");
 
 		} catch (Exception e1) {
 			System.out.println(TAG + "서버 연결 에러" + e1.getMessage());
-			taChatList.append("서버 연결 에러"+"\n");
+			taChatList.append("서버 연결 에러" + "\n");
 		}
 
 	}
 
 	class ReaderThread extends Thread {
-		
-		
-		
+
 		// while을 돌면서 서버로부터 메시지를 받아서 taChatList에 뿌리기
 		@Override
 		public void run() {
 			String input = null;
 
 			try {
-			
+
 				while ((input = reader.readLine()) != null) {
 					taChatList.append(input + "\n");
 
@@ -172,7 +168,7 @@ public class ChatClient extends JFrame {
 
 	public static void main(String[] args) {
 
-			new ChatClient();
-		
+		new ChatClient();
+
 	}
 }
