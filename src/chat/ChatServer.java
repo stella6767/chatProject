@@ -95,7 +95,7 @@ public class ChatServer {
 					vc.get(i).writer.println("[클라이언트" + this.getName() + "] " + line);
 					vc.get(i).writer.flush();
 				} else if (!line.contains(Protocol.ALL) && vc.get(i) == this) {
-					//vc.get(i).writer.println("이 메시지는 개인만 볼 수 있습니다.");
+					vc.get(i).writer.println("이 메시지는 개인에게만 보입니다.");
 					vc.get(i).writer.flush();
 				}
 			}
