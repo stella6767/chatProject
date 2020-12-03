@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -16,9 +18,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -37,6 +41,9 @@ public class ChatClient extends JFrame {
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
+	private JRadioButton[] rbtn;
+	private ButtonGroup btngroup;
+	private String[] text = { "전체 메시지", "개인 메시지" };
 
 	public ChatClient() {
 		init();
@@ -57,15 +64,19 @@ public class ChatClient extends JFrame {
 		scrollPane = new ScrollPane();
 		topPanel = new JPanel();
 		bottomPanel = new JPanel();
+		rbtn = new JRadioButton[2];
+		btngroup = new ButtonGroup();
+
 	}
 
 	private void setting() {
 		setTitle("채팅 다대다 클라이언트");
-		setSize(400, 350);
+		setSize(600, 350);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		taChatList.setBackground(Color.ORANGE);
 		taChatList.setForeground(Color.BLUE);
+
 	}
 
 	private void batch() {
@@ -78,6 +89,14 @@ public class ChatClient extends JFrame {
 		add(topPanel, BorderLayout.NORTH);
 		add(scrollPane, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
+
+		for (int i = 0; i < rbtn.length; i++) {
+			rbtn[i] = new JRadioButton(text[i]);
+			btngroup.add(rbtn[i]);
+			topPanel.add(rbtn[i]);
+		}
+
+		rbtn[0].setSelected(true);
 	}
 
 	private void listener() {
@@ -106,6 +125,17 @@ public class ChatClient extends JFrame {
 				writer.flush();
 			}
 		});
+//		rbtn[0].addItemListener(new ItemListener() {
+//
+//			@Override
+//			public void itemStateChanged(ItemEvent e) {
+//				while (rbtn[0].isSelected()) {
+//					writer.println(Protocol.ALL);
+//					writer.flush();
+//				}
+//
+//			}
+//		});
 
 	}
 
@@ -115,6 +145,12 @@ public class ChatClient extends JFrame {
 		// 1번 taChatList 뿌리기
 		taChatList.append("[내 메시지] " + chat + "\n"); // 추가
 		// 2번 서버로 전송
+		if (rbtn[0].isSelected()) {
+			writer.println(Protocol.ALL+chat);
+			writer.flush();
+		}
+		
+		
 		writer.println(chat);
 		writer.flush();
 
@@ -128,7 +164,7 @@ public class ChatClient extends JFrame {
 		String host = tfHost.getText();
 		try {
 
-			taChatList.append("ALL: 치고 글자 입력하세요.(프로토콜 때문) " + "\n");
+			// taChatList.append("ALL: 치고 글자 입력하세요.(프로토콜 때문) " + "\n");
 			socket = new Socket(host, PORT);
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream(), true);

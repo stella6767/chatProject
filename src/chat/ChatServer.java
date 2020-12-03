@@ -72,12 +72,11 @@ public class ChatServer {
 			try {
 				while ((line = reader.readLine()) != null) {
 					router(line);
-					fileWriter.write(line, 0, line.length());
+					fileWriter.write("[클라이언트" + this.getName() + "] " +line);
 					fileWriter.write("\r\n", 0, 2);
 					fileWriter.flush();
 					if (line.contains(Protocol.Exit)) {
 						break;
-
 					}
 				}
 
@@ -94,7 +93,7 @@ public class ChatServer {
 					vc.get(i).writer.println("[클라이언트" + this.getName() + "] " + line);
 					vc.get(i).writer.flush();
 				} else if (!line.contains(Protocol.ALL) && vc.get(i) == this) {
-					vc.get(i).writer.println("프로토콜 입력유무를 확인해주세요.");
+					//vc.get(i).writer.println("이 메시지는 개인만 볼 수 있습니다.");
 					vc.get(i).writer.flush();
 				}
 			}
